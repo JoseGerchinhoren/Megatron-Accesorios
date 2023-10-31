@@ -3,7 +3,7 @@ import pyodbc
 import json
 
 # Cargar configuración desde el archivo config.json
-with open("config.json") as config_file:
+with open("../config.json") as config_file:
     config = json.load(config_file)
 
 # Función para insertar un nuevo usuario en la base de datos
@@ -30,7 +30,7 @@ def crear_usuario(nombreApellido, email, contrasena, fechaNacimiento, dni, domic
     except Exception as e:
         st.error(f"Error al crear el usuario: {e}")
 
-def crear_usuario_tab():
+def crear_usuario():
     st.title("Crear Usuario")
 
     # Campos para ingresar los datos del nuevo usuario
@@ -50,4 +50,4 @@ def crear_usuario_tab():
             st.warning("Por favor, complete todos los campos.")
 
 if __name__ == "__main__":
-    crear_usuario_tab()
+    crear_usuario()

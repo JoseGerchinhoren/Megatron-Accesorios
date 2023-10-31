@@ -3,7 +3,7 @@ import pyodbc
 import json
 
 # Cargar configuración desde el archivo config.json
-with open("config.json") as config_file:
+with open("../config.json") as config_file:
     config = json.load(config_file)
 
 # Función para insertar una venta en la base de datos
@@ -30,7 +30,7 @@ def insertar_venta(fecha, producto, precio, metodo_pago, empleado):
     except Exception as e:
         st.error(f"Error al registrar la venta: {e}")
 
-def venta_tab():
+def venta():
     st.title("Registrar Venta")
 
     # Campos para ingresar los datos de la venta
@@ -48,4 +48,4 @@ def venta_tab():
             st.warning("Por favor, complete todos los campos.")
 
 if __name__ == "__main__":
-    venta_tab()
+    venta()
