@@ -35,6 +35,8 @@ def login(username, password):
             st.session_state.logged_in = True
             st.session_state.user_rol = rol
             st.success(f"Bienvenido, {username}! Inicio de sesión exitoso!")
+            # Redirigir después de iniciar sesión
+            st.experimental_rerun()  # Recargar la aplicación para mostrar el contenido correcto
         else:
             st.error("Credenciales incorrectas. Inténtalo de nuevo")
 
@@ -56,12 +58,15 @@ def main():
         st.sidebar.title("Menú")
 
         if user_rol == "admin":
-            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Ingresos Diarios", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes", "Crear Usuario"])
+            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes", "Crear Usuario"])
+            if selected_option == "Nueva Venta":
+                venta()  # Cargar la pestaña para ingresar ventas
             if selected_option == "Crear Usuario":
                 crear_usuario()  # Cargar la pestaña para crear usuarios
+            
         else:
-            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Ingresos Diarios", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes"])
-            if selected_option == "Ingresos Diarios":
+            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes"])
+            if selected_option == "Nueva Venta":
                 venta()  # Cargar la pestaña para ingresar ventas
 
     else:
