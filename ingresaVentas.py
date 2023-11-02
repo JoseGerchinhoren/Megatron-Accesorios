@@ -36,8 +36,16 @@ def venta():
     # Campos para ingresar los datos de la venta
     fecha = st.date_input("Fecha de la venta")
     producto = st.text_input("Producto vendido")
-    precio = st.number_input("Precio", value=0)
-    metodo_pago = st.text_input("Método de pago")
+    precio = st.text_input("Precio")
+    if precio:
+        if precio.isdigit():
+            precio = int(precio)
+        else:
+            st.warning("El precio debe ser un número entero.")
+            precio = None
+    else:
+        precio = None
+    metodo_pago = st.selectbox("Método de pago", ["Efectivo", "Transferencia", "Tarjeta de Crédito", "Tarjeta de Débito"])
     empleado = st.text_input("Empleado que lo vendió")
 
     # Botón para registrar la venta
