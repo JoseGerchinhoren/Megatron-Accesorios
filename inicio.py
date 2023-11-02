@@ -4,26 +4,38 @@ import json
 from ingresaVentas import venta
 from creaUsuarios import crear_usuario
 
+# Crear una variable de sesión para almacenar el nombre y apellido del usuario
+user_nombre_apellido = st.session_state.get("user_nombre_apellido", "")
+
 # Cargar configuración desde el archivo config.json
 with open("../config.json") as config_file:
     config = json.load(config_file)
 
-# Crear una variable de sesión para almacenar el estado de inicio de sesión
+# Conexión a la base de datos SQL Server
+db = pyodbc.connect(
+    driver=config["driver"],
+    server=config["server"],
+    database=config["database"],
+    uid=config["user"],
+    pwd=config["password"]
+)
+
+def buscar_usuarios(nombre_usuario_input):
+    cursor = db.cursor()
+    query = "SELECT nombreApellido FROM Usuarios WHERE nombreApellido LIKE ?"
+    cursor.execute(query, f"%{nombre_usuario_input}%")
+    usuarios = [usuario[0] for usuario in cursor.fetchall()]
+    cursor.close()
+    return usuarios
+
+# Definir las variables para el estado de inicio de sesión
 logged_in = st.session_state.get("logged_in", False)
 user_rol = st.session_state.get("user_rol", "")
 
 # Función para verificar las credenciales y obtener el rol del usuario
 def login(username, password):
     try:
-        # Conexión a la base de datos SQL Server
-        conn_str = (
-            f"DRIVER={{{config['driver']}}};"
-            f"SERVER={config['server']};"
-            f"DATABASE={config['database']};"
-            f"UID={config['user']};"
-            f"PWD={config['password']};"
-        )
-        conn = pyodbc.connect(conn_str)
+        conn = db
         cursor = conn.cursor()
 
         query = "SELECT rol FROM Usuarios WHERE nombreApellido = ? AND contraseña = ?"
@@ -33,8 +45,8 @@ def login(username, password):
         if row:
             rol = row[0]
             st.session_state.logged_in = True
-            st.session_state.user_rol = rol
-            st.success(f"Bienvenido, {username}! Inicio de sesión exitoso!")
+            st.session_state.user_rol = rol  # Actualizar el rol en la sesión
+            st.session_state.user_nombre_apellido = username  # Almacenar el nombre y apellido en la sesión
             # Redirigir después de iniciar sesión
             st.experimental_rerun()  # Recargar la aplicación para mostrar el contenido correcto
         else:
@@ -63,23 +75,29 @@ def main():
                 venta()  # Cargar la pestaña para ingresar ventas
             if selected_option == "Crear Usuario":
                 crear_usuario()  # Cargar la pestaña para crear usuarios
-            
         else:
             selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes"])
             if selected_option == "Nueva Venta":
                 venta()  # Cargar la pestaña para ingresar ventas
 
+        if selected_option == "Inicio":
+            st.write(f"Bienvenido, {user_nombre_apellido}! - Megatron Accesorios - Sistema de Gestión")
+
+        # Agregar una etiqueta que muestre el nombre del usuario
+        st.write(f"Usuario: {user_nombre_apellido}")
+
     else:
         st.sidebar.title("Inicio de Sesión")
-        username = st.text_input("Nombre de Usuario:")
-        password = st.text_input("Contraseña:", type="password")
 
-        if st.button("Iniciar Sesión"):
-            login(username, password)
+        # Inicializar un formulario para el inicio de sesión
+        with st.form(key="login_form"):
+            username = st.text_input("Nombre de Usuario:")
+            password = st.text_input("Contraseña:", type="password")
 
-    # Mostrar opción de cerrar sesión si está autenticado
-    if logged_in:
-        st.sidebar.button("Cerrar Sesión", on_click=logout)
+            login_submitted = st.form_submit_button("Iniciar Sesión")
+
+            if login_submitted and username and password:
+                login(username, password)
 
 if __name__ == "__main__":
     main()
