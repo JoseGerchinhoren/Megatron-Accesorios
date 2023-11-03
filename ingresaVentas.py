@@ -7,7 +7,7 @@ with open("../config.json") as config_file:
     config = json.load(config_file)
 
 # Función para insertar una venta en la base de datos
-def insertar_venta(fecha, producto, precio, metodo_pago, empleado):
+def insertar_venta(fecha, producto, precio, metodo_pago, id_usuario):
     try:
         # Conexión a la base de datos SQL Server
         conn_str = (
@@ -21,8 +21,8 @@ def insertar_venta(fecha, producto, precio, metodo_pago, empleado):
         cursor = conn.cursor()
 
         # Insertar la venta en la base de datos
-        query = "INSERT INTO Ventas (fecha, productoVendido, precio, metodoPago, idEmpleado) VALUES (?, ?, ?, ?, ?)"
-        cursor.execute(query, (fecha, producto, precio, metodo_pago, empleado))
+        query = "INSERT INTO Ventas (fecha, productoVendido, precio, metodoPago, idUsuario) VALUES (?, ?, ?, ?, ?)"
+        cursor.execute(query, (fecha, producto, precio, metodo_pago, id_usuario))
         conn.commit()
         conn.close()
         st.success("Venta registrada exitosamente")
@@ -30,13 +30,13 @@ def insertar_venta(fecha, producto, precio, metodo_pago, empleado):
     except Exception as e:
         st.error(f"Error al registrar la venta: {e}")
 
-def venta():
+def venta(id_usuario):
     st.title("Registrar Venta")
 
     # Campos para ingresar los datos de la venta
-    fecha = st.date_input("Fecha de la venta")
-    producto = st.text_input("Producto vendido")
-    precio = st.text_input("Precio")
+    fecha = st.date_input("Fecha de la venta:")
+    producto = st.text_input("Producto vendido:")
+    precio = st.text_input("Precio:")
     if precio:
         if precio.isdigit():
             precio = int(precio)
@@ -45,13 +45,12 @@ def venta():
             precio = None
     else:
         precio = None
-    metodo_pago = st.selectbox("Método de pago", ["Efectivo", "Transferencia", "Tarjeta de Crédito", "Tarjeta de Débito"])
-    empleado = st.text_input("Empleado que lo vendió")
+    metodo_pago = st.selectbox("Método de pago:", ["Efectivo", "Transferencia", "Tarjeta de Crédito", "Tarjeta de Débito"])
 
     # Botón para registrar la venta
     if st.button("Registrar Venta"):
-        if fecha and producto and precio > 0 and metodo_pago and empleado:
-            insertar_venta(fecha, producto, precio, metodo_pago, empleado)
+        if fecha and producto and precio > 0 and metodo_pago:
+            insertar_venta(fecha, producto, precio, metodo_pago, id_usuario)
         else:
             st.warning("Por favor, complete todos los campos.")
 

@@ -38,17 +38,17 @@ def login(username, password):
         conn = db
         cursor = conn.cursor()
 
-        query = "SELECT rol FROM Usuarios WHERE nombreApellido = ? AND contraseña = ?"
+        query = "SELECT rol, idUsuario FROM Usuarios WHERE nombreApellido = ? AND contraseña = ?"
         cursor.execute(query, (username, password))
         row = cursor.fetchone()
 
         if row:
-            rol = row[0]
+            rol, id_usuario = row
             st.session_state.logged_in = True
-            st.session_state.user_rol = rol  # Actualizar el rol en la sesión
-            st.session_state.user_nombre_apellido = username  # Almacenar el nombre y apellido en la sesión
-            # Redirigir después de iniciar sesión
-            st.experimental_rerun()  # Recargar la aplicación para mostrar el contenido correcto
+            st.session_state.user_rol = rol
+            st.session_state.user_nombre_apellido = username
+            st.session_state.id_usuario = id_usuario  # Inicializa el id_usuario en la sesión
+            st.experimental_rerun()
         else:
             st.error("Credenciales incorrectas. Inténtalo de nuevo")
 
@@ -72,13 +72,15 @@ def main():
         if user_rol == "admin":
             selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes", "Crear Usuario"])
             if selected_option == "Nueva Venta":
-                venta()  # Cargar la pestaña para ingresar ventas
+                venta(st.session_state.id_usuario)  # Pasa el id_usuario como argumento
             if selected_option == "Crear Usuario":
-                crear_usuario()  # Cargar la pestaña para crear usuarios
+                crear_usuario()
         else:
             selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Cobros de Arreglos", "Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes"])
             if selected_option == "Nueva Venta":
-                venta()  # Cargar la pestaña para ingresar ventas
+                venta(st.session_state.id_usuario)  # Pasa el id_usuario como argumento
+            if selected_option == "Crear Usuario":
+                crear_usuario()  # Cargar la pestaña para crear usuarios
 
         if selected_option == "Inicio":
             st.write(f"Bienvenido, {user_nombre_apellido}! - Megatron Accesorios - Sistema de Gestión")
