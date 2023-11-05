@@ -48,12 +48,30 @@ def visualiza_ventas():
     # Ejecutar la consulta y obtener los resultados en un DataFrame
     ventas_df = pd.read_sql(query, db)
 
-    # Mostrar la tabla de ventas
+    # Consulta SQL para obtener la información de los usuarios
+    query_usuarios = "SELECT idUsuario, nombreApellido FROM Usuarios"
+    usuarios_df = pd.read_sql(query_usuarios, db)
+
+    # Fusionar (unir) el DataFrame de ventas con el DataFrame de usuarios
+    ventas_df = pd.merge(ventas_df, usuarios_df, on="idUsuario", how="left")
+
+    # Mostrar la tabla de ventas con la nueva columna de nombre de usuario
     st.dataframe(ventas_df)
 
     # Calcular y mostrar el total de precios
     total_precios = ventas_df["precio"].sum()
-    st.write(f"Total de ventas: ${total_precios:}")
+    st.title(f"Total de ventas: ${total_precios:.2f}")
+
+    # Calcular y mostrar el total por método de pago
+    total_efectivo = ventas_df[ventas_df["metodoPago"] == "Efectivo"]["precio"].sum()
+    total_transferencia = ventas_df[ventas_df["metodoPago"] == "Transferencia"]["precio"].sum()
+    total_credito = ventas_df[ventas_df["metodoPago"] == "Tarjeta de Crédito"]["precio"].sum()
+    total_debito = ventas_df[ventas_df["metodoPago"] == "Tarjeta de Débito"]["precio"].sum()
+
+    st.write(f"Total en Efectivo: ${total_efectivo:.2f}")
+    st.write(f"Total en Transferencia: ${total_transferencia:.2f}")
+    st.write(f"Total en Tarjeta de Crédito: ${total_credito:.2f}")
+    st.write(f"Total en Tarjeta de Débito: ${total_debito:.2f}")
 
 def main():
     visualiza_ventas()
