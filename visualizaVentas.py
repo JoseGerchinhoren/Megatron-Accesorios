@@ -60,7 +60,7 @@ def visualiza_ventas():
 
     # Calcular y mostrar el total de precios
     total_precios = ventas_df["precio"].sum()
-    st.title(f"Total de ventas: ${total_precios:.2f}")
+    st.title(f"Total de ventas: ${total_precios:}")
 
     # Calcular y mostrar el total por método de pago
     total_efectivo = ventas_df[ventas_df["metodoPago"] == "Efectivo"]["precio"].sum()
@@ -68,10 +68,10 @@ def visualiza_ventas():
     total_credito = ventas_df[ventas_df["metodoPago"] == "Tarjeta de Crédito"]["precio"].sum()
     total_debito = ventas_df[ventas_df["metodoPago"] == "Tarjeta de Débito"]["precio"].sum()
 
-    st.write(f"Total en Efectivo: ${total_efectivo:.2f}")
-    st.write(f"Total en Transferencia: ${total_transferencia:.2f}")
-    st.write(f"Total en Tarjeta de Crédito: ${total_credito:.2f}")
-    st.write(f"Total en Tarjeta de Débito: ${total_debito:.2f}")
+    st.write(f"Total en Efectivo: ${total_efectivo:}")
+    st.write(f"Total en Transferencia: ${total_transferencia:}")
+    st.write(f"Total en Tarjeta de Crédito: ${total_credito:}")
+    st.write(f"Total en Tarjeta de Débito: ${total_debito:}")
 
 def main():
     visualiza_ventas()
