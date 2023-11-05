@@ -5,6 +5,7 @@ from ingresaVentas import venta
 from creaUsuarios import crear_usuario
 from visualizaVentas import visualiza_ventas
 from ingresaPedidoFunda import ingresaPedidoFunda
+from visualizaPedidosFundas import visualiza_pedidos_fundas
 
 # Crear una variable de sesión para almacenar el nombre y apellido del usuario
 user_nombre_apellido = st.session_state.get("user_nombre_apellido", "")
@@ -73,18 +74,7 @@ def main():
         st.sidebar.title("Menú")
 
         if user_rol == "admin":
-            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Arreglos", "Control de Ingresos", "Clientes", "Crear Usuario"])  # Agrega "Visualizar Ventas" al menú
-            if selected_option == "Nueva Venta":
-                venta(st.session_state.id_usuario)
-            if selected_option == "Crear Usuario":
-                crear_usuario()
-            if selected_option == "Visualizar Ventas":  # Agrega una condición para mostrar visualizaVentas
-                visualiza_ventas()
-            if selected_option == "Nuevo Pedido de Funda":
-                ingresaPedidoFunda(st.session_state.id_usuario)
-
-        else:
-            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Arreglos", "Control de Ingresos", "Clientes"])
+            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes", "Crear Usuario"])  # Agrega "Visualizar Ventas" al menú
             if selected_option == "Nueva Venta":
                 venta(st.session_state.id_usuario)
             if selected_option == "Crear Usuario":
@@ -93,6 +83,21 @@ def main():
                 visualiza_ventas()
             if selected_option == "Nuevo Pedido de Funda":
                 ingresaPedidoFunda(st.session_state.id_usuario)
+            if selected_option == "Visualizar Pedidos de Fundas":
+                visualiza_pedidos_fundas()
+
+        else:
+            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Arreglos", "Control de Ingresos", "Clientes"])
+            if selected_option == "Nueva Venta":
+                venta(st.session_state.id_usuario)
+            if selected_option == "Crear Usuario":
+                crear_usuario()
+            if selected_option == "Visualizar Ventas":
+                visualiza_ventas()
+            if selected_option == "Nuevo Pedido de Funda":
+                ingresaPedidoFunda(st.session_state.id_usuario)
+            if selected_option == "Visualizar Pedidos de Fundas":
+                visualiza_pedidos_fundas()
 
         if selected_option == "Inicio":
             st.write(f"Bienvenido, {user_nombre_apellido}! - Megatron Accesorios - Sistema de Gestión")
