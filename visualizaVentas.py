@@ -43,13 +43,17 @@ def visualiza_ventas():
     if id_usuario:
         query += f" AND idUsuario = '{id_usuario}'"
     
-    query += " ORDER BY fecha DESC"
+    query += " ORDER BY idVenta DESC"
 
     # Ejecutar la consulta y obtener los resultados en un DataFrame
     ventas_df = pd.read_sql(query, db)
 
     # Mostrar la tabla de ventas
     st.dataframe(ventas_df)
+
+    # Calcular y mostrar el total de precios
+    total_precios = ventas_df["precio"].sum()
+    st.write(f"Total de ventas: ${total_precios:}")
 
 def main():
     visualiza_ventas()
