@@ -4,7 +4,7 @@ CREATE TABLE pedidosFundas (
     fecha DATE,
 	pedido VARCHAR(500),
     nombreCliente TEXT,
-    Contacto VARCHAR(250),
+    contacto VARCHAR(250),
     estado TEXT,
     idUsuario INTEGER,
 );

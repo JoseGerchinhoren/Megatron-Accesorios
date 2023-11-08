@@ -40,17 +40,38 @@ def visualiza_pedidos_fundas():
     st.title("Visualizar Pedidos de Fundas")
 
     # Construir la consulta SQL para obtener los pedidos de fundas
-    query = "SELECT * FROM pedidosFundas"
+    query = "SELECT * FROM pedidosFundas ORDER BY idPedidoFunda DESC"
 
     # Ejecutar la consulta y obtener los resultados en un DataFrame
     pedidos_df = pd.read_sql(query, db)
 
+    # Consulta SQL para obtener la información de los usuarios
+    query_usuarios = "SELECT idUsuario, nombreApellido FROM Usuarios"
+    usuarios_df = pd.read_sql(query_usuarios, db)
+
+    # Fusionar (unir) el DataFrame de ventas con el DataFrame de usuarios
+    pedidos_df = pd.merge(pedidos_df, usuarios_df, on="idUsuario", how="left")
+
+    # Cambiar los nombres de las columnas
+    pedidos_df.columns = ["ID", "Fecha", "Pedido", "Nombre del Cliente", "Contacto", "Estado", "ID Usuario", "Nombre de Usuario"]
+
+    # Cambiar el orden del DataFrame
+    pedidos_df = pedidos_df[[
+        "ID",
+        "Fecha",
+        "Pedido",
+        "Estado",
+        "Nombre del Cliente",
+        "Contacto",
+        "Nombre de Usuario"
+    ]]
+
     # Agregar un filtro por estado
-    estados = pedidos_df['estado'].unique()
+    estados = pedidos_df['Estado'].unique()
     filtro_estado = st.selectbox("Filtrar por Estado:", ["Todos"] + list(estados))
 
     if filtro_estado != "Todos":
-        pedidos_df = pedidos_df[pedidos_df['estado'] == filtro_estado]
+        pedidos_df = pedidos_df[pedidos_df['Estado'] == filtro_estado]
 
     # Mostrar la tabla de pedidos de fundas
     st.dataframe(pedidos_df)
