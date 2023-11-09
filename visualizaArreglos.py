@@ -2,6 +2,8 @@ import streamlit as st
 import pyodbc
 import pandas as pd
 import json
+from PIL import Image
+import io
 
 # Cargar configuración desde el archivo config.json
 with open("../config.json") as config_file:
@@ -33,7 +35,7 @@ def visualizar_arreglos():
     arreglos_df = pd.merge(arreglos_df, usuarios_df, on="idUsuario", how="left")
 
     # Cambiar los nombres de las columnas
-    arreglos_df.columns = ["ID", "Fecha", "Nombre del Cliente", "Contacto", "Modelo", "Falla", "Tipo Desbloqueo", "Imagen Patrón", "Estado", "Observaciones", "ID Usuario", "Nombre de Usuario"]
+    arreglos_df.columns = ["ID", "Fecha", "Nombre del Cliente", "Contacto", "Modelo", "Falla", "Contraseña Desbloqueo", "Imagen Patrón", "Estado", "Observaciones", "ID Usuario", "Nombre de Usuario"]
 
     # Cambiar el orden del DataFrame
     arreglos_df = arreglos_df[[
@@ -43,9 +45,8 @@ def visualizar_arreglos():
         "Contacto",
         "Modelo",
         "Falla",
-        "Tipo Desbloqueo",
-        "Imagen Patrón",
         "Estado",
+        "Contraseña Desbloqueo",
         "Observaciones",
         "Nombre de Usuario"
     ]]
@@ -59,6 +60,35 @@ def visualizar_arreglos():
 
     # Mostrar la tabla de arreglos de servicio técnico
     st.dataframe(arreglos_df)
+
+    # Sección para ingresar el ID y mostrar la imagen del patrón de desbloqueo
+    st.subheader("Visualizar Imagen de Patrón de Desbloqueo por ID")
+    id_arreglo = st.number_input("Ingrese el ID del Arreglo:", value=0)
+
+    # Obtener la imagen del patrón de desbloqueo según el ID
+    imagen_patron = obtener_imagen_patron(id_arreglo)
+
+    # Mostrar la imagen si está disponible
+    if imagen_patron is not None:
+        st.image(imagen_patron, caption=f"Imagen del Patrón de Desbloqueo para el ID {id_arreglo}", width=400)
+    else:
+        st.warning(f"No se encontró ninguna imagen para el ID {id_arreglo}")
+
+def obtener_imagen_patron(id_arreglo):
+    try:
+        # Construir la consulta SQL para obtener la imagen del patrón de desbloqueo por ID
+        query = f"SELECT imagenPatron FROM ArreglosTecnico WHERE idArreglo = {id_arreglo}"
+        
+        # Ejecutar la consulta y obtener los resultados en un DataFrame
+        result_df = pd.read_sql(query, db)
+
+        # Obtener la imagen del patrón de desbloqueo (si está disponible)
+        imagen_patron = result_df.at[0, 'imagenPatron'] if not result_df.empty else None
+
+        return Image.open(io.BytesIO(imagen_patron)) if imagen_patron is not None else None
+    except Exception as e:
+        st.error(f"Error al obtener la imagen del patrón de desbloqueo: {e}")
+        return None
 
 def main():
     visualizar_arreglos()
