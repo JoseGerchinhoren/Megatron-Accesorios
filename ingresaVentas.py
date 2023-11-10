@@ -45,7 +45,7 @@ def venta(id_usuario):
             precio = None
     else:
         precio = None
-    metodo_pago = st.selectbox("Método de pago:", ["Efectivo", "Transferencia", "Tarjeta de Crédito", "Tarjeta de Débito"])
+    metodo_pago = st.selectbox("Método de pago:", ["Efectivo", "Transferencia", "Tarjeta de Crédito", "Tarjeta de Débito", "Otro"])
 
     # Botón para registrar la venta
     if st.button("Registrar Venta"):

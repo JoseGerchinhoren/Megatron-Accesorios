@@ -3,7 +3,7 @@ import pyodbc
 import json
 from ingresaVentas import venta
 from creaUsuarios import crear_usuario
-from visualizaVentas import visualiza_ventas
+from visualizaVentas import main as visualiza_ventas
 from ingresaPedidoFunda import ingresaPedidoFunda
 from visualizaPedidosFundas import visualiza_pedidos_fundas
 from ingresaArreglo import ingresa_arreglo_tecnico
