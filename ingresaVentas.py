@@ -1,6 +1,7 @@
 import streamlit as st
 import pyodbc
 import json
+from datetime import datetime
 
 # Cargar configuración desde el archivo config.json
 with open("../config.json") as config_file:
@@ -34,7 +35,8 @@ def venta(id_usuario):
     st.title("Registrar Venta")
 
     # Campos para ingresar los datos de la venta
-    fecha = st.date_input("Fecha de la venta:")
+    if st.session_state.user_rol == "admin":
+        fecha = st.date_input("Fecha de la venta:")
     producto = st.text_input("Producto vendido:")
     precio = st.text_input("Precio:")
     if precio:
@@ -49,10 +51,16 @@ def venta(id_usuario):
 
     # Botón para registrar la venta
     if st.button("Registrar Venta"):
-        if fecha and producto and precio > 0 and metodo_pago:
-            insertar_venta(fecha, producto, precio, metodo_pago, id_usuario)
+        if st.session_state.user_rol == "admin":
+            if fecha and producto and precio > 0 and metodo_pago:
+                insertar_venta(fecha, producto, precio, metodo_pago, id_usuario)
+            else:
+                st.warning("Por favor, complete todos los campos.")
         else:
-            st.warning("Por favor, complete todos los campos.")
+            if producto and precio > 0 and metodo_pago:
+                insertar_venta(datetime.now(), producto, precio, metodo_pago, id_usuario)
+            else:
+                st.warning("Por favor, complete todos los campos.")
 
 if __name__ == "__main__":
     venta()
