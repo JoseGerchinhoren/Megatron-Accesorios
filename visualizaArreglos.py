@@ -74,6 +74,14 @@ def visualizar_arreglos():
     else:
         st.warning(f"No se encontró ninguna imagen para el ID {id_arreglo}")
 
+        # Sección para la edición del estado de registros
+    st.subheader("Editar Estado")
+    id_arreglo = st.number_input("Ingrese el ID del Pedido de Funda que desea editar:", value=0)
+    nuevo_estado = st.selectbox("Nuevo valor del campo estado:", ["Señado", "Pedido", "Avisado","Entregado", "Cancelado"])
+
+    if st.button("Guardar"):
+        editar_estado_arreglo(arreglos_df, id_arreglo, nuevo_estado)
+
 def obtener_imagen_patron(id_arreglo):
     try:
         # Construir la consulta SQL para obtener la imagen del patrón de desbloqueo por ID
@@ -89,6 +97,26 @@ def obtener_imagen_patron(id_arreglo):
     except Exception as e:
         st.error(f"Error al obtener la imagen del patrón de desbloqueo: {e}")
         return None
+    
+def editar_estado_arreglo(arreglos_df, id_arreglo, nuevo_estado):
+    try:
+        # Crear un cursor para ejecutar comandos SQL
+        cursor = db.cursor()
+
+        # Verificar si el ID del arreglo
+        if id_arreglo not in arreglos_df['idArreglo'].values:
+            st.warning(f"El ID del servicio tecnico {id_arreglo} no existe.")
+            return
+
+        # Actualizar el estado del arreglo en la base de datos
+        query = f"UPDATE ArreglosTecnico SET estado = '{nuevo_estado}' WHERE idArrego = {id_arreglo}"
+        cursor.execute(query)
+        db.commit()
+
+        st.success(f"Estado del servicio tecnico {id_arreglo} editado correctamente a: {nuevo_estado}")
+
+    except Exception as e:
+        st.error(f"Error al editar el estado del servicio tecnico: {e}")
 
 def main():
     visualizar_arreglos()

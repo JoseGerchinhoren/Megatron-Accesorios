@@ -99,8 +99,6 @@ def main():
             selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Nuevo Servicio Tecnico", "Visualizar Servicios Tecnicos"])
             if selected_option == "Nueva Venta":
                 venta(st.session_state.id_usuario)
-            if selected_option == "Crear Usuario":
-                crear_usuario()
             if selected_option == "Visualizar Ventas":
                 visualiza_ventas()
             if selected_option == "Nuevo Pedido de Funda":
@@ -108,7 +106,9 @@ def main():
             if selected_option == "Visualizar Pedidos de Fundas":
                 visualiza_pedidos_fundas()
             if selected_option == "Nuevo Servicio Tecnico":
-                ingresa_arreglo_tecnico()
+                ingresa_arreglo_tecnico(st.session_state.id_usuario)
+            if selected_option == "Visualizar Servicios Tecnicos":
+                visualizar_arreglos()            
 
         if selected_option == "Inicio":
             st.write(f"Bienvenido, {user_nombre_apellido}! - Megatron Accesorios - Sistema de Gestión")

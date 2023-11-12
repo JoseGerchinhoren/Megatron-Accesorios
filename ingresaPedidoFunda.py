@@ -37,7 +37,7 @@ def ingresaPedidoFunda(id_usuario):
     pedido = st.text_input("Pedido:")
     nombreCliente = st.text_input("Nombre del Cliente:")
     Contacto = st.text_input("Contacto:")
-    estado = st.selectbox("Estado:", [ "Señado", "Pedido", "Entregado", "Cancelado"])
+    estado = st.selectbox("Estado:", [ "Señado", "Pedido", "Avisado", "Entregado", "Cancelado"])
 
     # Botón para registrar el pedido de funda
     if st.button("Registrar Pedido"):

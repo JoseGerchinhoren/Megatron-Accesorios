@@ -79,7 +79,7 @@ def visualiza_pedidos_fundas():
     # Sección para la edición del estado de registros
     st.subheader("Editar Estado")
     id_pedido_funda = st.number_input("Ingrese el ID del Pedido de Funda que desea editar:", value=0)
-    nuevo_estado = st.selectbox("Nuevo valor del campo estado:", ["Señado", "Pedido", "Entregado", "Cancelado"])
+    nuevo_estado = st.selectbox("Nuevo valor del campo estado:", ["Señado", "Pedido", "Avisado","Entregado", "Cancelado"])
 
     if st.button("Guardar"):
         editar_estado_pedido_funda(pedidos_df, id_pedido_funda, nuevo_estado)
