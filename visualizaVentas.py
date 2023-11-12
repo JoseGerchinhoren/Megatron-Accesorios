@@ -95,64 +95,110 @@ def editar_ventas():
         query_venta = f"SELECT * FROM Ventas WHERE idVenta = {id_venta_editar}"
         venta_editar_df = pd.read_sql(query_venta, db)
 
-        if not venta_editar_df.empty:
-            # Mostrar la información actual de la venta
-            st.write("Información actual de la venta:")
-            # Cambiar los nombres de las columnas
-            venta_editar_df.columns = ["ID", "Fecha", "Producto Vendido", "Precio", "Metodo de Pago", "ID Usuario"]
+        # Verificar si el usuario es admin
+        if st.session_state.user_rol == "admin":
 
-            # Cambiar el orden del DataFrame
-            venta_editar_df = venta_editar_df[[
-                "ID", "Fecha", "Producto Vendido", "Precio", "Metodo de Pago", "ID Usuario"
-            ]]
+            if not venta_editar_df.empty:
+                # Mostrar la información actual de la venta
+                st.write("Información actual de la venta:")
+                # Cambiar los nombres de las columnas
+                venta_editar_df.columns = ["ID", "Fecha", "Producto Vendido", "Precio", "Metodo de Pago", "ID Usuario"]
 
-            st.dataframe(venta_editar_df)
+                # Cambiar el orden del DataFrame
+                venta_editar_df = venta_editar_df[[
+                    "ID", "Fecha", "Producto Vendido", "Precio", "Metodo de Pago", "ID Usuario"
+                ]]
 
-            # Mostrar campos para editar cada variable
-            for column in venta_editar_df.columns:
-                nuevo_valor = st.text_input(f"Nuevo valor para {column}", value=venta_editar_df.iloc[0][column])
-                venta_editar_df.at[0, column] = nuevo_valor
+                st.dataframe(venta_editar_df)
 
-            # Botón para guardar los cambios
-            if st.button("Guardar cambios"):
-                # Actualizar la venta en la base de datos
-                nueva_informacion = {
-                    "fecha": venta_editar_df.at[0, "Fecha"],
-                    "productoVendido": venta_editar_df.at[0, "Producto Vendido"],
-                    "precio": venta_editar_df.at[0, "Precio"],
-                    "metodoPago": venta_editar_df.at[0, "Metodo de Pago"],
-                    "idUsuario": venta_editar_df.at[0, "ID Usuario"]
-                }
+                # Mostrar campos para editar cada variable
+                for column in venta_editar_df.columns:
+                    nuevo_valor = st.text_input(f"Nuevo valor para {column}", value=venta_editar_df.iloc[0][column])
+                    venta_editar_df.at[0, column] = nuevo_valor
 
-                # Generar la sentencia SQL UPDATE
-                update_query = f"""
-                    UPDATE Ventas
-                    SET
-                        fecha = '{nueva_informacion["fecha"]}',
-                        productoVendido = '{nueva_informacion["productoVendido"]}',
-                        precio = {nueva_informacion["precio"]},
-                        metodoPago = '{nueva_informacion["metodoPago"]}',
-                        idUsuario = {nueva_informacion["idUsuario"]}
-                    WHERE idVenta = {id_venta_editar}
-                """
+                # Botón para guardar los cambios
+                if st.button("Guardar cambios"):
+                    # Actualizar la venta en la base de datos
+                    nueva_informacion = {
+                        "fecha": venta_editar_df.at[0, "Fecha"],
+                        "productoVendido": venta_editar_df.at[0, "Producto Vendido"],
+                        "precio": venta_editar_df.at[0, "Precio"],
+                        "metodoPago": venta_editar_df.at[0, "Metodo de Pago"],
+                        "idUsuario": venta_editar_df.at[0, "ID Usuario"]
+                    }
 
-                # Ejecutar la sentencia SQL UPDATE
-                cursor = db.cursor()
-                cursor.execute(update_query)
-                db.commit()
+                    # Generar la sentencia SQL UPDATE
+                    update_query = f"""
+                        UPDATE Ventas
+                        SET
+                            fecha = '{nueva_informacion["fecha"]}',
+                            productoVendido = '{nueva_informacion["productoVendido"]}',
+                            precio = {nueva_informacion["precio"]},
+                            metodoPago = '{nueva_informacion["metodoPago"]}',
+                            idUsuario = {nueva_informacion["idUsuario"]}
+                        WHERE idVenta = {id_venta_editar}
+                    """
 
-                st.success("¡Venta actualizada correctamente!")
+                    # Ejecutar la sentencia SQL UPDATE
+                    cursor = db.cursor()
+                    cursor.execute(update_query)
+                    db.commit()
 
-        else:
-            st.warning(f"No se encontró ninguna venta con el ID {id_venta_editar}")
+                    st.success("¡Venta actualizada correctamente!")
 
+            else:
+                st.warning(f"No se encontró ninguna venta con el ID {id_venta_editar}")
+        
+        if not st.session_state.user_rol == "admin":
+            if not venta_editar_df.empty:
+                # Mostrar la información actual de la venta
+                st.write("Campos que puede modificar:")
+                # Cambiar los nombres de las columnas
+                venta_editar_df.columns = ["ID", "Fecha", "Producto Vendido", "Precio", "Metodo de Pago", "ID Usuario"]
+
+                # Cambiar el orden del DataFrame
+                venta_editar_df = venta_editar_df[["Producto Vendido", "Precio", "Metodo de Pago"]]
+
+                st.dataframe(venta_editar_df)
+
+                # Mostrar campos para editar cada variable
+                for column in venta_editar_df.columns:
+                    nuevo_valor = st.text_input(f"Nuevo valor para {column}", value=venta_editar_df.iloc[0][column])
+                    venta_editar_df.at[0, column] = nuevo_valor
+
+                # Botón para guardar los cambios
+                if st.button("Guardar cambios"):
+                    # Actualizar la venta en la base de datos
+                    nueva_informacion = {
+                        "productoVendido": venta_editar_df.at[0, "Producto Vendido"],
+                        "precio": venta_editar_df.at[0, "Precio"],
+                        "metodoPago": venta_editar_df.at[0, "Metodo de Pago"]
+                    }
+
+                    # Generar la sentencia SQL UPDATE
+                    update_query = f"""
+                        UPDATE Ventas
+                        SET
+                            productoVendido = '{nueva_informacion["productoVendido"]}',
+                            precio = {nueva_informacion["precio"]},
+                            metodoPago = '{nueva_informacion["metodoPago"]}'
+                        WHERE idVenta = {id_venta_editar}
+                    """
+
+                    # Ejecutar la sentencia SQL UPDATE
+                    cursor = db.cursor()
+                    cursor.execute(update_query)
+                    db.commit()
+
+                    st.success("¡Venta actualizada correctamente!")
+
+            else:
+                st.warning(f"No se encontró ninguna venta con el ID {id_venta_editar}")
 
 def main():
     visualiza_ventas()  # Mostrar sección de visualización para todos los usuarios
 
-    # Verificar si el usuario es admin
-    if st.session_state.user_rol == "admin":
-        editar_ventas()  # Mostrar sección de edición solo para admin
+    editar_ventas()  # Mostrar sección de edición solo para admin
 
 if __name__ == "__main__":
     main()
