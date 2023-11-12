@@ -8,7 +8,7 @@ from ingresaPedidoFunda import ingresaPedidoFunda
 from visualizaPedidosFundas import visualiza_pedidos_fundas
 from ingresaArreglo import ingresa_arreglo_tecnico
 from visualizaArreglos import visualizar_arreglos
-from visualizaUsuarios import visualizar_usuarios
+from visualizaUsuarios import main as visualizar_usuarios
 
 # Crear una variable de sesión para almacenar el nombre y apellido del usuario
 user_nombre_apellido = st.session_state.get("user_nombre_apellido", "")
