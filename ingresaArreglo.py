@@ -45,7 +45,7 @@ def ingresa_arreglo_tecnico(idUsuario):
     # Cargar imagen para el patrón de desbloqueo
     imagen_patron = st.file_uploader("Cargar Imagen para Patrón de Desbloqueo", type=["jpg", "jpeg", "png"])
 
-    estado_options = ["A arreglar", "En el técnico", "Entregado"]
+    estado_options = ["A arreglar", "En el técnico", "Avisado al Cliente", "Entregado"]
     estado = st.selectbox("Estado:", estado_options)
 
     observaciones = st.text_input("Observaciones:")

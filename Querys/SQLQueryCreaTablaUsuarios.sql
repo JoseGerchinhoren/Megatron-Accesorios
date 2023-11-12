@@ -7,6 +7,6 @@ CREATE TABLE Usuarios (
     fechaNacimiento DATE,
     dni VARCHAR(15) NOT NULL UNIQUE,
     domicilio VARCHAR(255),
-    fechaCreacion DATETIME NOT NULL DEFAULT GETDATE(),
+    fechaCreacion DATE NOT NULL DEFAULT GETDATE(),
     rol VARCHAR(50) NOT NULL
 );

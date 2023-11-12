@@ -8,6 +8,7 @@ from ingresaPedidoFunda import ingresaPedidoFunda
 from visualizaPedidosFundas import visualiza_pedidos_fundas
 from ingresaArreglo import ingresa_arreglo_tecnico
 from visualizaArreglos import visualizar_arreglos
+from visualizaUsuarios import visualizar_usuarios
 
 # Crear una variable de sesión para almacenar el nombre y apellido del usuario
 user_nombre_apellido = st.session_state.get("user_nombre_apellido", "")
@@ -76,7 +77,7 @@ def main():
         st.sidebar.title("Menú")
 
         if user_rol == "admin":
-            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Nuevo Servicio Tecnico", "Visualizar Servicios Tecnicos", "Crear Usuario"])
+            selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Nuevo Servicio Tecnico", "Visualizar Servicios Tecnicos", "Crear Usuario", "Visualizar Usuarios"])
             if selected_option == "Nueva Venta":
                 venta(st.session_state.id_usuario)
             if selected_option == "Crear Usuario":
@@ -91,6 +92,8 @@ def main():
                 ingresa_arreglo_tecnico(st.session_state.id_usuario)
             if selected_option == "Visualizar Servicios Tecnicos":
                 visualizar_arreglos()
+            if selected_option == "Visualizar Usuarios":
+                visualizar_usuarios()
 
         else:
             selected_option = st.sidebar.selectbox("Seleccione una opción:", ["Inicio", "Nueva Venta", "Visualizar Ventas", "Nuevo Pedido de Funda", "Visualizar Pedidos de Fundas", "Nuevo Servicio Tecnico", "Visualizar Servicios Tecnicos"])

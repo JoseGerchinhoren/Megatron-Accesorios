@@ -68,7 +68,7 @@ def visualiza_ventas():
 
     # Calcular y mostrar el total de precios
     total_precios = ventas_df["Precio"].sum()
-    st.title(f"Total de ventas: ${total_precios:}")
+    st.title(f"Total de Ventas: ${total_precios:}")
 
     # Calcular y mostrar el total por método de pago
     total_efectivo = ventas_df[ventas_df["Metodo de Pago"] == "Efectivo"]["Precio"].sum()
