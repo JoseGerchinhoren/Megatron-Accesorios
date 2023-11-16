@@ -54,7 +54,7 @@ def login(username, password):
             st.session_state.user_rol = rol
             st.session_state.user_nombre_apellido = username
             st.session_state.id_usuario = id_usuario  # Inicializa el id_usuario en la sesión
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Credenciales incorrectas. Inténtalo de nuevo")
 
