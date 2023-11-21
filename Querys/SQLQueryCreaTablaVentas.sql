@@ -7,5 +7,5 @@ CREATE TABLE Ventas (
     productoVendido VARCHAR(255),
     precio INT,
     metodoPago VARCHAR(50),
-    idEmpleado INT
+    idUsuario INT
 );

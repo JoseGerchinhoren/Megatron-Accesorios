@@ -6,5 +6,6 @@ CREATE TABLE pedidosFundas (
     nombreCliente TEXT,
     contacto VARCHAR(250),
     estado TEXT,
-    idUsuario INTEGER,
+	montoSeña INT,
+    idUsuario INT
 );

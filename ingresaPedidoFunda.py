@@ -7,7 +7,7 @@ with open("../config.json") as config_file:
     config = json.load(config_file)
 
 # Función para insertar un pedido de funda en la base de datos
-def insertar_pedido_funda(fecha, pedido, nombreCliente, Contacto, estado, id_usuario):
+def insertar_pedido_funda(fecha, pedido, nombreCliente, contacto, estado, monto_sena, id_usuario):
     try:
         # Conexión a la base de datos SQL Server
         conn_str = (
@@ -21,7 +21,7 @@ def insertar_pedido_funda(fecha, pedido, nombreCliente, Contacto, estado, id_usu
         cursor = conn.cursor()
 
         # Llamar a la stored procedure para insertar el pedido de funda
-        cursor.execute("EXEC InsertarPedidoFunda ?, ?, ?, ?, ?, ?", (fecha, pedido, nombreCliente, Contacto, estado, id_usuario))
+        cursor.execute("EXEC InsertarPedidoFunda ?, ?, ?, ?, ?, ?, ?", (fecha, pedido, nombreCliente, contacto, estado, monto_sena, id_usuario))
         conn.commit()
         conn.close()
         st.success("Pedido de funda registrado exitosamente")
@@ -36,13 +36,26 @@ def ingresaPedidoFunda(id_usuario):
     fecha = st.date_input("Fecha del Pedido:")
     pedido = st.text_input("Pedido:")
     nombreCliente = st.text_input("Nombre del Cliente:")
-    Contacto = st.text_input("Contacto:")
-    estado = st.selectbox("Estado:", [ "Señado", "Pedido", "Avisado", "Entregado", "Cancelado"])
+    contacto = st.text_input("Contacto:")
+    estado = st.selectbox("Estado:", ["Señado", "Pedido", "Avisado", "Entregado", "Cancelado"])
+
+    # Campo adicional para el monto de señal si el estado es "Señado"
+    monto_sena = None
+    if estado == "Señado":
+        monto_sena = st.text_input("Monto de seña:")
+    if monto_sena:
+        if monto_sena.isdigit():
+            monto_sena = int(monto_sena)
+        else:
+            st.warning("El monto debe ser un número entero.")
+            monto_sena = None
+    else:
+        monto_sena = None
 
     # Botón para registrar el pedido de funda
     if st.button("Registrar Pedido"):
-        if fecha and pedido and nombreCliente and Contacto and estado:
-            insertar_pedido_funda(fecha, pedido, nombreCliente, Contacto, estado, id_usuario)
+        if fecha and pedido and nombreCliente and contacto and estado:
+            insertar_pedido_funda(fecha, pedido, nombreCliente, contacto, estado, monto_sena, id_usuario)
         else:
             st.warning("Por favor, complete todos los campos.")
 

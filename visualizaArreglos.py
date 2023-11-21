@@ -104,19 +104,20 @@ def editar_estado_arreglo(arreglos_df, id_arreglo, nuevo_estado):
         cursor = db.cursor()
 
         # Verificar si el ID del arreglo
-        if id_arreglo not in arreglos_df['idArreglo'].values:
-            st.warning(f"El ID del servicio tecnico {id_arreglo} no existe.")
+        if id_arreglo not in arreglos_df['ID'].values:
+            st.warning(f"El ID del servicio técnico {id_arreglo} no existe.")
             return
 
         # Actualizar el estado del arreglo en la base de datos
-        query = f"UPDATE ArreglosTecnico SET estado = '{nuevo_estado}' WHERE idArrego = {id_arreglo}"
+        query = f"UPDATE ArreglosTecnico SET estado = '{nuevo_estado}' WHERE idArreglo = {id_arreglo}"
         cursor.execute(query)
         db.commit()
 
-        st.success(f"Estado del servicio tecnico {id_arreglo} editado correctamente a: {nuevo_estado}")
+        st.success(f"Estado del servicio técnico {id_arreglo} editado correctamente a: {nuevo_estado}")
 
     except Exception as e:
-        st.error(f"Error al editar el estado del servicio tecnico: {e}")
+        st.error(f"Error al editar el estado del servicio técnico: {e}")
+
 
 def main():
     visualizar_arreglos()

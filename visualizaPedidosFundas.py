@@ -22,7 +22,7 @@ def editar_estado_pedido_funda(pedidos_df, id_pedido_funda, nuevo_estado):
         cursor = db.cursor()
 
         # Verificar si el ID del Pedido de Funda existe
-        if id_pedido_funda not in pedidos_df['idPedidoFunda'].values:
+        if id_pedido_funda not in pedidos_df['ID'].values:
             st.warning(f"El ID del Pedido de Funda {id_pedido_funda} no existe.")
             return
 
@@ -53,7 +53,7 @@ def visualiza_pedidos_fundas():
     pedidos_df = pd.merge(pedidos_df, usuarios_df, on="idUsuario", how="left")
 
     # Cambiar los nombres de las columnas
-    pedidos_df.columns = ["ID", "Fecha", "Pedido", "Nombre del Cliente", "Contacto", "Estado", "ID Usuario", "Nombre de Usuario"]
+    pedidos_df.columns = ["ID", "Fecha", "Pedido", "Nombre del Cliente", "Contacto", "Estado", "Monto Seña","ID Usuario", "Nombre de Usuario"]
 
     # Cambiar el orden del DataFrame
     pedidos_df = pedidos_df[[
@@ -61,6 +61,7 @@ def visualiza_pedidos_fundas():
         "Fecha",
         "Pedido",
         "Estado",
+        "Monto Seña",
         "Nombre del Cliente",
         "Contacto",
         "Nombre de Usuario"

@@ -5,9 +5,10 @@ CREATE PROCEDURE InsertarPedidoFunda
     @nombreCliente TEXT,
     @Contacto VARCHAR(250),
     @estado TEXT,
+    @monto_sena INT,
     @idUsuario INTEGER
 AS
 BEGIN
-    INSERT INTO pedidosFundas (fecha, pedido, nombreCliente, Contacto, estado, idUsuario)
-    VALUES (@fecha, @pedido, @nombreCliente, @Contacto, @estado, @idUsuario);
+    INSERT INTO pedidosFundas (fecha, pedido, nombreCliente, Contacto, estado, montoSeña, idUsuario)
+    VALUES (@fecha, @pedido, @nombreCliente, @Contacto, @estado, @monto_sena, @idUsuario);
 END;
